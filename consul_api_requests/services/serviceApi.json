@@ -1,0 +1,10 @@
+{
+    "ID": "serviceApi",
+    "Name": "serviceApi",
+    "Tags": [
+        "urlprefix-/prediction"
+    ],
+    "Address": "host.docker.internal",
+    "Port": 5277,
+    "EnableTagOverride": false
+}

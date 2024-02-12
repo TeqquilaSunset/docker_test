@@ -1,0 +1,10 @@
+{
+    "ID": "serviceFront",
+    "Name": "serviceFront",
+    "Tags": [
+        "urlprefix-/index"
+    ],
+    "Address": "host.docker.internal",
+    "Port": 5289,
+    "EnableTagOverride": false
+}

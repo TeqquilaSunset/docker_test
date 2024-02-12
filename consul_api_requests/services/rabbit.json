@@ -1,0 +1,10 @@
+{
+    "ID": "rabbitmq",
+    "Name": "rabbitmq",
+    "Tags": [
+        "urlprefix-/rabbit"
+    ],
+    "Address": "host.docker.internal",
+    "Port": 5672,
+    "EnableTagOverride": false
+}

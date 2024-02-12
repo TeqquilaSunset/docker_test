@@ -1,0 +1,8 @@
+{
+    "ID": "Api-check",
+    "Name": "Health check for Api",
+    "Notes": "Checks if Api is running",
+    "ServiceID": "serviceFront",
+    "http": "http://host.docker.internal:5289/healthCheck",
+    "Interval": "10s"
+}

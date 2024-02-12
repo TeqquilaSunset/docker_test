@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\ConsulService2.props" />
+</Project>

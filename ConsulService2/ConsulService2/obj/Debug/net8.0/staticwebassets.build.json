@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "uatS4Jj2e8oX4agDqH84/XgFdyUEnXlEgLxx7TNbvAg=",
+  "Source": "ConsulService2",
+  "BasePath": "_content/ConsulService2",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

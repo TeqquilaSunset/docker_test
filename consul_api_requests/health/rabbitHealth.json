@@ -1,0 +1,8 @@
+{
+    "ID": "rabbitmq-check",
+    "Name": "Health check for RabbitMQ",
+    "Notes": "Checks if RabbitMQ is running",
+    "ServiceID": "rabbitmq",
+    "http": "http://host.docker.internal:15672/api",
+    "Interval": "10s"
+}
