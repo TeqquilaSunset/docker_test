@@ -19,19 +19,6 @@ namespace ConsulService1.Controllers
             
             _predictionServices = predictionServices;
 
-            //rabbit
-            //var factory = new ConnectionFactory()
-            //{
-            //    HostName = "localhost",
-            //    Port = 9999,
-            //    VirtualHost = "/rabbit",
-            //    UserName = "rmuser",
-            //    Password = "rmpassword"
-            //}; 
-            //_rabbitConnection = factory.CreateConnection();
-            //_channel = _rabbitConnection.CreateModel();
-
-            //_channel.QueueDeclare(queue: "predictionsQueue", durable: false, exclusive: false, autoDelete: false, arguments: null);
         }
 
         [HttpGet("/healthCheck")]
@@ -44,10 +31,6 @@ namespace ConsulService1.Controllers
         public IActionResult GetPrediction()
         {
             var prediction = _predictionServices.CreatePrediction();
-
-            //rabbit
-            //var body = Encoding.UTF8.GetBytes(prediction);
-            //_channel.BasicPublish(exchange: "", routingKey: "predictionsQueue", basicProperties: null, body: body);
 
             return Ok(prediction);
         }
