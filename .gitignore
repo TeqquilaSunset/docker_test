@@ -289,3 +289,5 @@ Saved/
 Intermediate/
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,csharp,dotnetcore,visualstudiocode
+/ConsulService1/ConsulService1/obj/Debug/net8.0/ConsulService1.assets.cache
+/ConsulService1/ConsulService1/obj/Debug/net8.0/ConsulService1.GeneratedMSBuildEditorConfig.editorconfig
