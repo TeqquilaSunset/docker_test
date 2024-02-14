@@ -1,7 +1,7 @@
 {
-    "ID": "Front-check",
-    "Name": "Health check for Front",
-    "Notes": "Checks if Front is running",
+    "ID": "Api-check",
+    "Name": "Health check for Api",
+    "Notes": "Checks if FroAp int is running",
     "ServiceID": "serviceApi",
     "http": "http://host.docker.internal:5277/healthCheck",
     "Interval": "10s"
