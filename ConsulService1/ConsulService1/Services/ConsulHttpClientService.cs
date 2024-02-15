@@ -3,61 +3,77 @@ using System.Reflection.Metadata;
 using System.Text;
 using Newtonsoft.Json;
 using System.Drawing;
+using static System.Net.WebRequestMethods;
 
 namespace ConsulService1.Services
 {
+    /// <summary>
+    /// Автоматическая регистрация сервиса при запуске и дерегистрация при выключении в consul 
+    /// </summary>
     public class ConsulHttpClientService : IConsulHttpClient
     {
-        private const string _baseUrlConsul = $"http://host.docker.internal:8500/v1/agent";
-        private HttpClient _http = new HttpClient();
-        private string _baseName = $"service-api-{GenerateShortUid(8)}";
-        private int index = 1;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly string _baseUrlConsul = $"http://host.docker.internal:8500/v1/agent/service";
+        private readonly int _hostPort;
+        private readonly string _idService;
+
+        public ConsulHttpClientService(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+            _hostPort = GetPort();
+            _idService = $"service-api-{GenerateShortUid(8)}-{_hostPort}";
+        }
 
         /// <summary>
-        /// Регистрация сервиса в conmsul
+        /// Регистрация сервиса в consul
         /// </summary>
-        /// <returns></returns>
         public async Task RegisterServiceAsync()
         {
-            
-            var serviceDefinition = new 
+            using (var httpClient = _httpClientFactory.CreateClient())
             {
-                ID = _baseName, //придумать над id
-                Name = "ServiceApi",
-                Tags = new List<string> { "urlprefix-/prediction" },
-                Address = "host.docker.internal",
-                Port = 5277, //подумать над портами
-                EnableTagOverride = false,
-                Check = new
+                
+
+                var serviceDefinition = new
                 {
-                    DeregisterCriticalServiceAfter = "3m",
-                    HTTP = "http://host.docker.internal:5277/healthCheck",
-                    Interval = "10s"
+                    ID = _idService, //service-api-{uid}-{port}
+                    Name = $"ServiceApi",
+                    Tags = new List<string> { "urlprefix-/prediction" },
+                    Address = "host.docker.internal",
+                    Port = _hostPort,
+                    EnableTagOverride = false,
+                    Check = new
+                    {
+                        DeregisterCriticalServiceAfter = "1m",
+                        HTTP = $"http://host.docker.internal:{_hostPort}/healthCheck",
+                        Interval = "10s"
+                    }
+                };
+                var json = JsonConvert.SerializeObject(serviceDefinition);
+
+                var response = await httpClient.PutAsync(_baseUrlConsul + "/register", new StringContent(json, Encoding.UTF8, "application/json"));
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception($"Failed to register the service in consul, statuscode:{response.StatusCode}");
                 }
-            };
-            var json = JsonConvert.SerializeObject(serviceDefinition);
-
-            var response = await _http.PutAsync(_baseUrlConsul + "/service/register", new StringContent(json, Encoding.UTF8, "application/json"));
-
-            if(!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"Failed to register the service in consul, statuscode:{response.StatusCode}");
             }
-            
         }
 
         /// <summary>
         /// Дерегистрация сервиса в consul
         /// </summary>
-        /// <returns></returns>
         public async Task DeregisterServiceAsync()
         {
-            var response = await _http.PutAsync(_baseUrlConsul + $"/service/deregister/{_baseName}", null);
-
-            if (!response.IsSuccessStatusCode)
+            using (var httpClient = _httpClientFactory.CreateClient())
             {
-                throw new Exception($"Failed to deregister the service in consul, statuscode:{response.StatusCode}");
+                var response = await httpClient.PutAsync(_baseUrlConsul + $"/deregister/{_idService}", null);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception($"Failed to deregister the service in consul, statuscode:{response.StatusCode}");
+                }
             }
+
         }
 
         private static string GenerateShortUid(int length)
@@ -65,6 +81,14 @@ namespace ConsulService1.Services
             Guid guid = Guid.NewGuid();
             string shortUid = guid.ToString().Substring(0, length);
             return shortUid;
+        }
+
+        private static int GetPort()
+        {
+            string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://localhost:5000";
+            var uri = new Uri(url);
+            var port = uri.Port;
+            return port;
         }
 
     }
