@@ -1,6 +1,6 @@
 ﻿namespace ConsulService1.Services
 {
-    public class PredictionServices : IPredictionsGenerator
+    public class PredictionService : IPredictionsGenerator
     {
         List<string> stageOneList = new List<string>()
         {
