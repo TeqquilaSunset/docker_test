@@ -28,7 +28,7 @@ services:
       - "9999:9999"
     volumes:
       - ./fabio.properties:/etc/fabio/fabio.properties
-  service_api:
+  service_api1:
     build:
       context: ConsulService1/ConsulService1/
       dockerfile: Dockerfile
@@ -38,6 +38,16 @@ services:
       - 5001:5001
     environment:
       - ASPNETCORE_URLS=http://0.0.0.0:5001
+  service_api2:
+    build:
+      context: ConsulService1/ConsulService1/
+      dockerfile: Dockerfile
+    depends_on:
+      - consul
+    ports:
+      - 5002:5002
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5002
   service_front:
     build:
       context: ConsulService2/ConsulService2/
