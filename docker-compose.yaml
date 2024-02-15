@@ -7,18 +7,18 @@ services:
     ports:
       - "8500:8500"
       - "8600:8600/udp"
-  rabbitmq:
-    image: rabbitmq:management-alpine
-    hostname: rabbitmq
-    restart: always
-    volumes:
-      - ./rabbitmq-data:/var/lib/rabbitmq
-    environment:
-      - RABBITMQ_DEFAULT_USER=rmuser
-      - RABBITMQ_DEFAULT_PASS=rmpassword
-    ports:
-      - 15672:15672
-      - 5672:5672
+  # rabbitmq:
+  #   image: rabbitmq:management-alpine
+  #   hostname: rabbitmq
+  #   restart: always
+  #   volumes:
+  #     - ./rabbitmq-data:/var/lib/rabbitmq
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=rmuser
+  #     - RABBITMQ_DEFAULT_PASS=rmpassword
+  #   ports:
+  #     - 15672:15672
+  #     - 5672:5672
   fabio:
     image: fabiolb/fabio
     depends_on:
@@ -34,9 +34,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - 5277:8080
-  service_front:
-    build:
-      context: ConsulService2/ConsulService2/
-      dockerfile: Dockerfile
-    ports:
-      - 5289:8080
+  # service_front:
+  #   build:
+  #     context: ConsulService2/ConsulService2/
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 5289:8080

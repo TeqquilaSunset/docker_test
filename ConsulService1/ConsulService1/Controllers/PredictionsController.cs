@@ -31,7 +31,6 @@ namespace ConsulService1.Controllers
         public IActionResult GetPrediction()
         {
             var prediction = _predictionServices.CreatePrediction();
-
             return Ok(prediction);
         }
     }
