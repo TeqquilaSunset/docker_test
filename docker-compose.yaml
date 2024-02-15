@@ -32,13 +32,19 @@ services:
     build:
       context: ConsulService1/ConsulService1/
       dockerfile: Dockerfile
+    depends_on:
+      - consul
     ports:
       - 5001:5001
     environment:
       - ASPNETCORE_URLS=http://0.0.0.0:5001
-  # service_front:
-  #   build:
-  #     context: ConsulService2/ConsulService2/
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 5289:8080
+  service_front:
+    build:
+      context: ConsulService2/ConsulService2/
+      dockerfile: Dockerfile
+    depends_on:
+      - consul
+    ports:
+      - 6001:6001
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:6001
