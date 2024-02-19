@@ -13,21 +13,13 @@ namespace ConsulService1.Services
     public class ConsulHttpClientService : IConsulHttpClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
-<<<<<<< HEAD
-        private readonly string _baseUrlConsul;
-=======
         private readonly string _baseUrlConsul = $"http://host.docker.internal:8500/v1/agent/service";
->>>>>>> c5bb339b3740bee56ecd58f72c2056a59a95fb37
         private readonly int _hostPort;
         private readonly string _idService;
 
         public ConsulHttpClientService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
-<<<<<<< HEAD
-            _baseUrlConsul = $"{GetConsulUrl()}/v1/agent/service";
-=======
->>>>>>> c5bb339b3740bee56ecd58f72c2056a59a95fb37
             _hostPort = GetPort();
             _idService = $"service-front-{GenerateShortUid(8)}-{_hostPort}";
         }
@@ -39,7 +31,7 @@ namespace ConsulService1.Services
         {
             using (var httpClient = _httpClientFactory.CreateClient())
             {
-                
+
 
                 var serviceDefinition = new
                 {

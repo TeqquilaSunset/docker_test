@@ -12,12 +12,8 @@ builder.Services.AddControllersWithViews();
 
 
 
-// Получение адреса хоста извне или использования стандартного
-<<<<<<< HEAD
-string url = Environment.GetEnvironmentVariable("ASPNETCORE_URL") ?? "http://localhost:57400";
-=======
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://0.0.0.0:6000";
->>>>>>> c5bb339b3740bee56ecd58f72c2056a59a95fb37
 builder.WebHost.UseUrls(url);
 
 builder.Services.AddHttpClient();
@@ -32,7 +28,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-// устанавливаем сопоставление маршрутов с контроллерами
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -43,10 +39,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Получите экземпляр сервиса
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 var consulHttpClient = app.Services.GetRequiredService<IConsulHttpClient>();
 
-// Регистрация при запуске
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 try
 {
     await consulHttpClient.RegisterServiceAsync();
@@ -54,10 +50,10 @@ try
 catch (Exception e) { }
 
 
-// Получите экземпляр IHostApplicationLifetime 
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ IHostApplicationLifetime 
 var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
 
-// Обратный вызов для дерегистрации сервиса при остановке
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 lifetime.ApplicationStopping.Register(async () =>
 {
     await consulHttpClient.DeregisterServiceAsync();
