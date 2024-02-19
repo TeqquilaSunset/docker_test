@@ -42,6 +42,7 @@ services:
       - 5001:5001
     environment:
       - ASPNETCORE_URL=http://0.0.0.0:5001
+      - CONSUL_URL=http://host.docker.internal:8500
 
   service_api2:
     build:
@@ -52,7 +53,8 @@ services:
     ports:
       - 5002:5002
     environment:
-      - ASPNETCORE_URLS=http://0.0.0.0:5002
+      - ASPNETCORE_URL=http://0.0.0.0:5002
+      - CONSUL_URL=http://host.docker.internal:8500
 
   service_front:
     build:
@@ -64,3 +66,4 @@ services:
       - 6001:6001
     environment:
       - ASPNETCORE_URL=http://0.0.0.0:6001
+      - CONSUL_URL=http://host.docker.internal:8500

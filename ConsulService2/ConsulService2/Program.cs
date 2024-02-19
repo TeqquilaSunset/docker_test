@@ -13,7 +13,7 @@ builder.Services.AddControllersWithViews();
 
 
 // ��������� ������ ����� ����� ��� ������������� ������������
-string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://0.0.0.0:6000";
+string url = Environment.GetEnvironmentVariable("ASPNETCORE_URL") ?? "http://0.0.0.0:6000";
 builder.WebHost.UseUrls(url);
 
 builder.Services.AddHttpClient();
