@@ -85,24 +85,11 @@ namespace ConsulService1.Services
 
         private static int GetPort()
         {
-<<<<<<< HEAD
-            string url = Environment.GetEnvironmentVariable("ASPNETCORE_URL") ?? "http://localhost:57400";
-=======
-            string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://localhost:5000";
->>>>>>> c5bb339b3740bee56ecd58f72c2056a59a95fb37
+            string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://localhost:6000";
             var uri = new Uri(url);
             var port = uri.Port;
             return port;
         }
 
-<<<<<<< HEAD
-        private static string GetConsulUrl()
-        {
-            string url = Environment.GetEnvironmentVariable("CONSUL_URL") ?? "http://127.0.0.1:8500";
-            return url;
-        }
-
-=======
->>>>>>> c5bb339b3740bee56ecd58f72c2056a59a95fb37
     }
 }
