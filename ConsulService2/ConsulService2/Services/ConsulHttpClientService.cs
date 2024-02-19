@@ -85,7 +85,7 @@ namespace ConsulService1.Services
 
         private static int GetPort()
         {
-            string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://localhost:5000";
+            string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://localhost:6000";
             var uri = new Uri(url);
             var port = uri.Port;
             return port;

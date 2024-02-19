@@ -13,7 +13,7 @@ builder.Services.AddControllersWithViews();
 
 
 // Получение адреса хоста извне или использования стандартного
-string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://0.0.0.0:6000";
+string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://localhost:6000";
 builder.WebHost.UseUrls(url);
 
 builder.Services.AddHttpClient();
