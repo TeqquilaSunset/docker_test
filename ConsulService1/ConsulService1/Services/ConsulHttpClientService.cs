@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using System.Reflection.Metadata;
+﻿using Newtonsoft.Json;
 using System.Text;
-using Newtonsoft.Json;
-using System.Drawing;
-using static System.Net.WebRequestMethods;
 
 namespace ConsulService1.Services
 {
@@ -13,13 +9,14 @@ namespace ConsulService1.Services
     public class ConsulHttpClientService : IConsulHttpClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly string _baseUrlConsul = $"http://host.docker.internal:8500/v1/agent/service";
+        private readonly string _baseUrlConsul;
         private readonly int _hostPort;
         private readonly string _idService;
 
         public ConsulHttpClientService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
+            _baseUrlConsul = $"{GetConsulUrl()}/v1/agent/service";
             _hostPort = GetPort();
             _idService = $"service-api-{GenerateShortUid(8)}-{_hostPort}";
         }
@@ -31,7 +28,7 @@ namespace ConsulService1.Services
         {
             using (var httpClient = _httpClientFactory.CreateClient())
             {
-                
+
 
                 var serviceDefinition = new
                 {
@@ -85,10 +82,16 @@ namespace ConsulService1.Services
 
         private static int GetPort()
         {
-            string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://localhost:5000";
+            string url = Environment.GetEnvironmentVariable("ASPNETCORE_URL") ?? "http://localhost:5000";
             var uri = new Uri(url);
             var port = uri.Port;
             return port;
+        }
+
+        private static string GetConsulUrl()
+        {
+            string url = Environment.GetEnvironmentVariable("CONSUL_URL") ?? "http://127.0.0.1:8500";
+            return url;
         }
 
     }

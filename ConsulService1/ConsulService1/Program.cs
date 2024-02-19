@@ -8,8 +8,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Получение адреса хоста из вне или использования стандартного
-string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://0.0.0.0:5000";
+// Получение адреса хоста извне или использования стандартного
+string url = Environment.GetEnvironmentVariable("ASPNETCORE_URL") ?? "http://0.0.0.0:5000";
 builder.WebHost.UseUrls(url);
 
 builder.Services.AddHttpClient();
