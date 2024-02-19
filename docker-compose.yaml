@@ -1,5 +1,6 @@
 version: '3'
 services:
+
   consul:
     image: consul:1.15.4
     command: ["agent", "-server", "-bootstrap-expect=1", "-ui", "-client=0.0.0.0"]
@@ -7,6 +8,7 @@ services:
     ports:
       - "8500:8500"
       - "8600:8600/udp"
+
   # rabbitmq:
   #   image: rabbitmq:management-alpine
   #   hostname: rabbitmq
@@ -19,6 +21,7 @@ services:
   #   ports:
   #     - 15672:15672
   #     - 5672:5672
+  
   fabio:
     image: fabiolb/fabio
     depends_on:
@@ -28,7 +31,8 @@ services:
       - "9999:9999"
     volumes:
       - ./fabio.properties:/etc/fabio/fabio.properties
-  service_api:
+
+  service_api1:
     build:
       context: ConsulService1/ConsulService1/
       dockerfile: Dockerfile
@@ -38,6 +42,18 @@ services:
       - 5001:5001
     environment:
       - ASPNETCORE_URLS=http://0.0.0.0:5001
+
+  service_api2:
+    build:
+      context: ConsulService1/ConsulService1/
+      dockerfile: Dockerfile
+    depends_on:
+      - consul
+    ports:
+      - 5002:5002
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5002
+
   service_front:
     build:
       context: ConsulService2/ConsulService2/
