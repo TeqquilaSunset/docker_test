@@ -30,34 +30,32 @@ namespace ConsulService1.Services
         /// </summary>
         public async Task RegisterServiceAsync()
         {
-            using (var httpClient = _httpClientFactory.CreateClient())
+            var httpClient = _httpClientFactory.CreateClient();
+
+            var serviceDefinition = new
             {
-
-
-                var serviceDefinition = new
+                ID = _idService, //service-api-{uid}-{port}
+                Name = $"ServiceFront",
+                Tags = new List<string> { "urlprefix-/index" },
+                Address = "host.docker.internal",
+                Port = _hostPort,
+                EnableTagOverride = false,
+                Check = new
                 {
-                    ID = _idService, //service-api-{uid}-{port}
-                    Name = $"ServiceFront",
-                    Tags = new List<string> { "urlprefix-/index" },
-                    Address = "host.docker.internal",
-                    Port = _hostPort,
-                    EnableTagOverride = false,
-                    Check = new
-                    {
-                        DeregisterCriticalServiceAfter = "1m",
-                        HTTP = $"http://host.docker.internal:{_hostPort}/healthCheck",
-                        Interval = "10s"
-                    }
-                };
-                var json = JsonConvert.SerializeObject(serviceDefinition);
-
-                var response = await httpClient.PutAsync(_baseUrlConsul + "/register", new StringContent(json, Encoding.UTF8, "application/json"));
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception($"Failed to register the service in consul, statuscode:{response.StatusCode}");
+                    DeregisterCriticalServiceAfter = "1m",
+                    HTTP = $"http://host.docker.internal:{_hostPort}/healthCheck",
+                    Interval = "10s"
                 }
+            };
+            var json = JsonConvert.SerializeObject(serviceDefinition);
+
+            var response = await httpClient.PutAsync(_baseUrlConsul + "/register", new StringContent(json, Encoding.UTF8, "application/json"));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Failed to register the service in consul, statuscode:{response.StatusCode}");
             }
+
         }
 
         /// <summary>
@@ -86,7 +84,7 @@ namespace ConsulService1.Services
 
         private static int GetPort()
         {
-            string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://localhost:6000";
+            string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://localhost:5775";
             var uri = new Uri(url);
             var port = uri.Port;
             return port;
