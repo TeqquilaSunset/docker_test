@@ -8,6 +8,11 @@ namespace ConsulService2.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IHttpRequest _httpRequset;
+        public HomeController(IHttpRequest httpRequset)
+        {
+            _httpRequset = httpRequset;
+        }
 
         [HttpGet("/healthCheck")]
         public IActionResult HealthCheck()
@@ -21,8 +26,7 @@ namespace ConsulService2.Controllers
 
             try
             {
-                HttpRequset httpRequset = new HttpRequset();
-                var result = await httpRequset.GetStirngPrediction();
+                var result = await _httpRequset.GetStringPredictionAsync();
                 ViewData["Prediction"] = result;
                 return View();
             }
