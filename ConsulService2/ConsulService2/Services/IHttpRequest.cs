@@ -1,6 +1,6 @@
 ﻿namespace ConsulService2.Services
 {
-    public interface IHttpReuest
+    public interface IHttpRequest
     {
         public Task<string> GetStringPredictionAsync();
     }

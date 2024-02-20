@@ -1,4 +1,5 @@
 using ConsulService1.Services;
+using ConsulService2.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +14,13 @@ builder.Services.AddControllersWithViews();
 
 
 
-string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://localhost:5775";
+string url = Environment.GetEnvironmentVariable("ASPNETCORE_URL") ?? "http://localhost:5775";
 builder.WebHost.UseUrls(url);
 
 builder.Services.AddHttpClient();
 
 builder.Services.AddSingleton<IConsulHttpClient, ConsulHttpClientService>();
+builder.Services.AddSingleton<IHttpRequest, ConsulService2.Services.HttpRequest>();
 
 var app = builder.Build();
 

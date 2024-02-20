@@ -3,7 +3,7 @@ using System.Text;
 
 namespace ConsulService2.Services
 {
-    public class HttpRequest : IHttpReuest
+    public class HttpRequest : IHttpRequest
     {
         private readonly IHttpClientFactory _httpClientFactory;
 

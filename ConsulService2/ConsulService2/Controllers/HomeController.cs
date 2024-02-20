@@ -8,8 +8,8 @@ namespace ConsulService2.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IHttpReuest _httpRequset;
-        public HomeController(IHttpReuest httpRequset)
+        private readonly IHttpRequest _httpRequset;
+        public HomeController(IHttpRequest httpRequset)
         {
             _httpRequset = httpRequset;
         }
