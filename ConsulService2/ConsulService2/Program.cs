@@ -12,7 +12,7 @@ builder.Services.AddControllersWithViews();
 
 
 
-// ��������� ������ ����� ����� ��� ������������� ������������
+
 string url = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? "http://localhost:6000";
 builder.WebHost.UseUrls(url);
 
@@ -28,7 +28,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-// ������������� ������������� ��������� � �������������
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -39,10 +39,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// �������� ��������� �������
+
 var consulHttpClient = app.Services.GetRequiredService<IConsulHttpClient>();
 
-// ����������� ��� �������
+
 try
 {
     await consulHttpClient.RegisterServiceAsync();
@@ -50,10 +50,10 @@ try
 catch (Exception e) { }
 
 
-// �������� ��������� IHostApplicationLifetime 
+
 var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
 
-// �������� ����� ��� ������������� ������� ��� ���������
+
 lifetime.ApplicationStopping.Register(async () =>
 {
     await consulHttpClient.DeregisterServiceAsync();
