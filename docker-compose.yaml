@@ -8,19 +8,6 @@ services:
     ports:
       - "8500:8500"
       - "8600:8600/udp"
-
-  # rabbitmq:
-  #   image: rabbitmq:management-alpine
-  #   hostname: rabbitmq
-  #   restart: always
-  #   volumes:
-  #     - ./rabbitmq-data:/var/lib/rabbitmq
-  #   environment:j
-  #     - RABBITMQ_DEFAULT_USER=rmuser
-  #     - RABBITMQ_DEFAULT_PASS=rmpassword
-  #   ports:
-  #     - 15672:15672
-  #     - 5672:5672
   
   fabio:
     image: fabiolb/fabio
