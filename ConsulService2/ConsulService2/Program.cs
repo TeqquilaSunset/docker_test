@@ -1,4 +1,5 @@
-using ConsulService1.Services;
+using Consul;
+using ConsulService2.Models;
 using ConsulService2.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,16 +12,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews();
 
-
-
-
 string url = Environment.GetEnvironmentVariable("ASPNETCORE_URL") ?? "http://localhost:5775";
 builder.WebHost.UseUrls(url);
 
 builder.Services.AddHttpClient();
-
-builder.Services.AddSingleton<IConsulHttpClient, ConsulHttpClientService>();
 builder.Services.AddSingleton<IHttpRequest, ConsulService2.Services.HttpRequest>();
+
+string urlConsul = Environment.GetEnvironmentVariable("CONSUL_URL") ?? "http://localhost:8500";
+builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+{
+    consulConfig.Address = new Uri(urlConsul);
+}));
+builder.Services.AddSingleton<IHostedService, ConsulHostedService>();
 
 var app = builder.Build();
 
@@ -38,20 +41,6 @@ app.MapControllerRoute(
 app.UseAuthorization();
 
 app.MapControllers();
-
-
-var consulHttpClient = app.Services.GetRequiredService<IConsulHttpClient>();
-try
-{
-    await consulHttpClient.RegisterServiceAsync();
-}
-catch (Exception e) { }
-
-var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-lifetime.ApplicationStopping.Register(async () =>
-{
-    await consulHttpClient.DeregisterServiceAsync();
-});
 
 app.Run();
 
