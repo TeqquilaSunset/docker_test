@@ -8,7 +8,28 @@ services:
     ports:
       - "8500:8500"
       - "8600:8600/udp"
-  
+
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    hostname: rabbitmq
+    restart: always
+    volumes:
+      - ./rabbitmq-data:/var/lib/rabbitmq
+      - ./rabbitmq.conf:/etc/rabbitmq/conf.d/my_config.conf
+    environment:
+      - RABBITMQ_DEFAULT_USER=rmuser
+      - RABBITMQ_DEFAULT_PASS=rmpassword
+    ports:
+      - 15672:15672
+      - 5672:5672
+    command: >
+      bash -c "
+        rabbitmq-plugins enable rabbitmq_peer_discovery_consul &&
+          rabbitmq-server
+      "
+    depends_on:
+      - consul
+
   fabio:
     image: fabiolb/fabio
     depends_on:
