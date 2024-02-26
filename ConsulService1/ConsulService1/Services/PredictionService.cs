@@ -2,13 +2,18 @@
 {
     public class PredictionService : IPredictionsGenerator
     {
-        List<string> stageOneList = new List<string>()
+        private List<string> stageOneList = new List<string>()
         {
             "хороший", "замечательный", "великолепный",
             "потрясный", "ужасный", "отвратиетельный", "наихудший",
             "обычный", "нормальный",
         };
         Random random = new Random();
+
+        public void AddPrediction(string newWord)
+        {
+            stageOneList.Add(newWord);
+        }
 
         public string CreatePrediction()
         {

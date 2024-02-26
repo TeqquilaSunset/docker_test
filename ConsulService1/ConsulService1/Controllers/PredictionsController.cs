@@ -11,8 +11,6 @@ namespace ConsulService1.Controllers
     public class PredictionsController : Controller
     {
         private readonly IPredictionsGenerator _predictionServices;
-        private readonly IConnection _rabbitConnection;
-        private readonly IModel _channel;
 
         public PredictionsController(IPredictionsGenerator predictionServices)
         {
@@ -32,6 +30,13 @@ namespace ConsulService1.Controllers
         {
             var prediction = _predictionServices.CreatePrediction();
             return Ok(prediction);
+        }
+
+        [HttpPut("/prediction/{word}")]
+        public IActionResult GetPrediction(string word)
+        {
+            _predictionServices.AddPrediction(word);
+            return Ok();
         }
     }
 }

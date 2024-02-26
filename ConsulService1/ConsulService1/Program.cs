@@ -10,12 +10,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Получение адреса хоста извне или использования стандартного
-string url = Environment.GetEnvironmentVariable("ASPNETCORE_URL") ?? "http://0.0.0.0:5000";
+string url = Environment.GetEnvironmentVariable("ASPNETCORE_URL") ?? "http://localhost:57369";
 builder.WebHost.UseUrls(url);
 
 builder.Services.AddHttpClient();
+builder.Services.AddSingleton<IPredictionsGenerator, PredictionService>();
 
-builder.Services.AddScoped<IPredictionsGenerator, PredictionService>();
 string urlConsul = Environment.GetEnvironmentVariable("CONSUL_URL") ?? "http://localhost:8500";
 builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
 {
