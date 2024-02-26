@@ -1,3 +1,4 @@
+using Consul;
 using ConsulService1.Services;
 using Microsoft.AspNetCore.Hosting;
 
@@ -15,7 +16,12 @@ builder.WebHost.UseUrls(url);
 builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<IPredictionsGenerator, PredictionService>();
-builder.Services.AddSingleton<IConsulHttpClient, ConsulHttpClientService>();
+string urlConsul = Environment.GetEnvironmentVariable("CONSUL_URL") ?? "http://localhost:8500";
+builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
+{
+    consulConfig.Address = new Uri(urlConsul);
+}));
+builder.Services.AddSingleton<IHostedService, ConsulHostedService>();
 
 var app = builder.Build();
 
@@ -25,27 +31,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-// Получите экземпляр сервиса
-var consulHttpClient = app.Services.GetRequiredService<IConsulHttpClient>();
-
-// Регистрация при запуске
-try
-{
-    await consulHttpClient.RegisterServiceAsync();
-}
-catch (Exception e) { }
-
 
 app.UseAuthorization();
 app.MapControllers();
 
-// Получите экземпляр IHostApplicationLifetime 
-var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
 
-// Обратный вызов для дерегистрации сервиса при остановке
-lifetime.ApplicationStopping.Register(async () =>
-{
-    await consulHttpClient.DeregisterServiceAsync();
-});
 
 app.Run();
