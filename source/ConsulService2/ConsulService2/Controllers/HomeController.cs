@@ -14,10 +14,12 @@ namespace ConsulService2.Controllers
     {
         private readonly IHttpRequest _httpRequset;
         private readonly IPublishEndpoint _publishEndpoint;
-        public HomeController(IHttpRequest httpRequset, IPublishEndpoint publishEndpoint)
+        private readonly IConfiguration _configuration;
+        public HomeController(IHttpRequest httpRequset, IPublishEndpoint publishEndpoint, IConfiguration configuration)
         {
             _httpRequset = httpRequset;
             _publishEndpoint = publishEndpoint;
+            _configuration = configuration;
         }
 
         [HttpGet("/healthCheck")]
@@ -44,9 +46,16 @@ namespace ConsulService2.Controllers
         
         [HttpPut("/addword")]
         public async Task<IActionResult> AddWord(NewPrediction obj)
-        {
+        { 
             await _publishEndpoint.Publish<NewPrediction>(obj);
             return Ok();
+        }
+
+        [HttpGet("/consul")]
+        public async Task<IActionResult> TextFromConsul()
+        {
+            var result = _configuration["service1/text"];
+            return Ok(result);
         }
     }
 }
