@@ -10,12 +10,12 @@
         };
         Random random = new Random();
 
-        public void AddPrediction(string newWord)
+        public void AddNewPredictionWord(string newWord)
         {
             stageOneList.Add(newWord);
         }
 
-        public string CreatePrediction()
+        public string GeneratePrediction()
         {
             var randInt = random.Next(0, stageOneList.Count);
             var resultWord = stageOneList[randInt];

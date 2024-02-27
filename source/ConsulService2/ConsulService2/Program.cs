@@ -1,6 +1,7 @@
 using Consul;
 using ConsulService2.Models;
 using ConsulService2.Services;
+using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,22 @@ builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient
     consulConfig.Address = new Uri(urlConsul);
 }));
 builder.Services.AddSingleton<IHostedService, ConsulHostedService>();
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("rabbitmq://localhost", c =>
+        {
+            c.Username("rmuser");
+            c.Password("rmpassword");
+        });
+
+        cfg.ClearSerialization();
+        cfg.UseRawJsonSerializer();
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
 var app = builder.Build();
 

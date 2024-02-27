@@ -1,5 +1,7 @@
 using Consul;
+using ConsulService1.Consumers;
 using ConsulService1.Services;
+using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,30 @@ builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient
     consulConfig.Address = new Uri(urlConsul);
 }));
 builder.Services.AddSingleton<IHostedService, ConsulHostedService>();
+
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<PredictionConsumer>();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("rabbitmq://localhost", c =>
+        {
+            c.Username("rmuser");
+            c.Password("rmpassword");
+        });
+
+        cfg.ReceiveEndpoint("PredictionQueue", e =>
+        {
+            e.ConfigureConsumer<PredictionConsumer>(context);
+        });
+
+        cfg.ClearSerialization();
+        cfg.UseRawJsonSerializer();
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
 
 var app = builder.Build();
 

@@ -28,14 +28,14 @@ namespace ConsulService1.Controllers
         [HttpGet("/prediction")]
         public IActionResult GetPrediction()
         {
-            var prediction = _predictionServices.CreatePrediction();
+            var prediction = _predictionServices.GeneratePrediction();
             return Ok(prediction);
         }
 
         [HttpPut("/prediction/{word}")]
         public IActionResult GetPrediction(string word)
         {
-            _predictionServices.AddPrediction(word);
+            _predictionServices.AddNewPredictionWord(word);
             return Ok();
         }
     }
