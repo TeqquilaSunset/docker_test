@@ -1,4 +1,5 @@
 using Consul;
+using ConsulService2.Helpers;
 using ConsulService2.Models;
 using ConsulService2.Services;
 using MassTransit;
@@ -27,30 +28,33 @@ builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient
 }));
 builder.Services.AddSingleton<IHostedService, ConsulHostedService>();
 
-var consulClient = new ConsulClient(x => x.Address = new Uri(urlConsul)); // адрес вашего Consul
-var kvPairs = consulClient.KV.List("service1").Result.Response; // ваш префикс в Consul
-var dict = new Dictionary<string, string>();
-foreach (var kvPair in kvPairs)
-{
-    dict.Add(kvPair.Key, Encoding.UTF8.GetString(kvPair.Value));
-}
-builder.Configuration.AddInMemoryCollection(dict.Select(kv => new KeyValuePair<string, string?>(kv.Key, kv.Value)));
 
-var serviceQueryResult = consulClient.Health.Service("rabbitmq").Result;
-var nbServices = serviceQueryResult?.Response?.Length;
-var rabbiturl = "rabbitmq://localhost";
-if (nbServices > 0)
+//var consulDemoKey = await ConsulKeyValueProvider.GetValueAsync<ConsulDemoKey>(key: "service1");
+//if (consulDemoKey != null)
+//{
+//    Dictionary<string, object?> dict2 = consulDemoKey.GetType().GetProperties().ToDictionary(
+//            prop => prop.Name,
+//            prop => prop.GetValue(consulDemoKey, null)
+//        );
+//    builder.Configuration.AddInMemoryCollection(dict2.Select(kv => new KeyValuePair<string, string?>(kv.Key, kv.Value.ToString())));
+//}
+
+var services = consulClient.Agent.Services().Result.Response;
+var rabbiturl = "";
+foreach (var service in services)
 {
-    Console.WriteLine($"{nbServices} service(s) found");
-    var service = serviceQueryResult?.Response[0]!;
-    rabbiturl = service.Service.Address;
+    if (service.Value.Service == "rabbitmq")
+    {
+        rabbiturl = service.Value.Address;
+        Console.WriteLine($"Найден сервис RabbitMQ: {service.Value.Address}:{service.Value.Port}");
+    }
 }
 
 builder.Services.AddMassTransit(x =>
 {
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("rabbiturl", c =>
+        cfg.Host("localhost", c =>
         {
             c.Username("rmuser");
             c.Password("rmpassword");

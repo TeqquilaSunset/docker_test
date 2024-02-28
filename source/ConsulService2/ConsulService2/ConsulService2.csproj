@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\..\source\repos\Microservices\Core\Core.csproj" />
+    <ProjectReference Include="..\..\Microservices\Core\Core.csproj" />
   </ItemGroup>
 
 </Project>

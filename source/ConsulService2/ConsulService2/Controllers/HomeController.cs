@@ -7,6 +7,7 @@ using MassTransit.RabbitMqTransport;
 using ConsulService2.Models;
 using MassTransit;
 using Core.Models;
+using ConsulService2.Helpers;
 namespace ConsulService2.Controllers
 {
     [ApiController]
@@ -54,7 +55,13 @@ namespace ConsulService2.Controllers
         [HttpGet("/consul")]
         public async Task<IActionResult> TextFromConsul()
         {
-            var result = _configuration["service1/text"];
+            //var consulDemoKey = await ConsulKeyValueProvider.GetValueAsync<ConsulDemoKey>(key: "servise1");
+
+            //if (consulDemoKey != null && consulDemoKey.IsEnabled)
+            //{
+            //    return Ok(consulDemoKey);
+            //}
+            var result = _configuration["Message"];
             return Ok(result);
         }
     }
