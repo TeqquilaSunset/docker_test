@@ -64,14 +64,14 @@ services:
   #     - ASPNETCORE_URL=http://0.0.0.0:5002
   #     - CONSUL_URL=http://host.docker.internal:8500
 
-  # service_front:
-  #   build:
-  #     context: source/ConsulService2/ConsulService2/
-  #     dockerfile: Dockerfile
-  #   depends_on:
-  #     - consul
-  #   ports:
-  #     - 6001:6001
-  #   environment:
-  #     - ASPNETCORE_URL=http://0.0.0.0:6001
-  #     - CONSUL_URL=http://host.docker.internal:8500
+  service_front:
+    build:
+      context: source/
+      dockerfile: Dockerfile.service2
+    depends_on:
+      - consul
+    ports:
+      - 6001:6001
+    environment:
+      - ASPNETCORE_URL=http://0.0.0.0:6001
+      - CONSUL_URL=http://host.docker.internal:8500

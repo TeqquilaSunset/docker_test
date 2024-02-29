@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsulService1", "..\ConsulService1\ConsulService1\ConsulService1.csproj", "{AD9F8857-7776-4BAD-A9BC-2279A0F88E66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsulService1", "ConsulService1\ConsulService1.csproj", "{AD9F8857-7776-4BAD-A9BC-2279A0F88E66}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsulService2", "..\ConsulService2\ConsulService2\ConsulService2.csproj", "{FF7FABFE-F518-4FCC-93A4-C3D3C01CA46E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsulService2", "ConsulService2\ConsulService2.csproj", "{FF7FABFE-F518-4FCC-93A4-C3D3C01CA46E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{334EE5B7-6411-4D32-893D-4D6213EAAA68}"
 EndProject

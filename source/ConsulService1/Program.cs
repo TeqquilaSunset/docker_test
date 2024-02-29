@@ -1,8 +1,10 @@
 using Consul;
 using ConsulService1.Consumers;
 using ConsulService1.Services;
+using Core.Models;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,11 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint("PredictionQueue", e =>
         {
             e.ConfigureConsumer<PredictionConsumer>(context);
+        });
+
+        cfg.Publish<NewPrediction>(e =>
+        {
+            e.ExchangeType = ExchangeType.Fanout;
         });
 
         cfg.ClearSerialization();

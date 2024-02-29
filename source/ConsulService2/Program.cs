@@ -28,33 +28,11 @@ builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient
 }));
 builder.Services.AddSingleton<IHostedService, ConsulHostedService>();
 
-
-//var consulDemoKey = await ConsulKeyValueProvider.GetValueAsync<ConsulDemoKey>(key: "service1");
-//if (consulDemoKey != null)
-//{
-//    Dictionary<string, object?> dict2 = consulDemoKey.GetType().GetProperties().ToDictionary(
-//            prop => prop.Name,
-//            prop => prop.GetValue(consulDemoKey, null)
-//        );
-//    builder.Configuration.AddInMemoryCollection(dict2.Select(kv => new KeyValuePair<string, string?>(kv.Key, kv.Value.ToString())));
-//}
-
-var services = consulClient.Agent.Services().Result.Response;
-var rabbiturl = "";
-foreach (var service in services)
-{
-    if (service.Value.Service == "rabbitmq")
-    {
-        rabbiturl = service.Value.Address;
-        Console.WriteLine($"Найден сервис RabbitMQ: {service.Value.Address}:{service.Value.Port}");
-    }
-}
-
 builder.Services.AddMassTransit(x =>
 {
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("localhost", c =>
+        cfg.Host("host.docker.internal", c =>
         {
             c.Username("rmuser");
             c.Password("rmpassword");

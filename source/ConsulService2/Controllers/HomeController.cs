@@ -52,17 +52,15 @@ namespace ConsulService2.Controllers
             return Ok();
         }
 
-        [HttpGet("/consul")]
-        public async Task<IActionResult> TextFromConsul()
+        [HttpGet("/consulKV")]
+        public IActionResult TextFromConsul()
         {
-            //var consulDemoKey = await ConsulKeyValueProvider.GetValueAsync<ConsulDemoKey>(key: "servise1");
+            if (_configuration["ShowMessage"] == null || _configuration["Message"] == null) 
+                NotFound();
 
-            //if (consulDemoKey != null && consulDemoKey.IsEnabled)
-            //{
-            //    return Ok(consulDemoKey);
-            //}
-            var result = _configuration["Message"];
-            return Ok(result);
+            if (bool.Parse(_configuration["ShowMessage"]!) == true)
+                return Ok(_configuration["Message"]);
+            else return NotFound();
         }
     }
 }
