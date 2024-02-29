@@ -8,6 +8,6 @@ namespace Core.Models
 {
     public class NewPrediction
     {
-        public string Prediction { get; set; }
+        public string? Prediction { get; set; }
     }
 }

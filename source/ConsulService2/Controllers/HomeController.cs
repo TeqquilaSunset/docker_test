@@ -7,7 +7,6 @@ using MassTransit.RabbitMqTransport;
 using ConsulService2.Models;
 using MassTransit;
 using Core.Models;
-using ConsulService2.Helpers;
 namespace ConsulService2.Controllers
 {
     [ApiController]

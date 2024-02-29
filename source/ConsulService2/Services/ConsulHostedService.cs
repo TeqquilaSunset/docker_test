@@ -1,6 +1,5 @@
 ﻿
 using Consul;
-using ConsulService2.Helpers;
 using ConsulService2.Models;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -24,15 +23,24 @@ namespace ConsulService2.Services
             _idService = $"service-front-{GenerateShortUid(8)}-{_hostPort}";
         }
 
+        /// <summary>
+        /// Запускается при старте
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             var registration = CreateAgentServiceRegistration();
             await _consulClient.Agent.ServiceRegister(registration, cancellationToken);
 
-            ConsulKeyValueProvider keyValueProvider = new();
-            await GetValueAsync<ConsulDemoKey>(key: "service1");
+            await GetValueAsync<ConsulDemoKey>(key: "service2");
         }
 
+        /// <summary>
+        /// Запускается при завершении
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             await _consulClient.Agent.ServiceDeregister(_idService);
@@ -44,7 +52,7 @@ namespace ConsulService2.Services
             {
                 ID = _idService,
                 Name = $"ServiceFront",
-                Tags = ["urlprefix-/ServiceFront", "strip-/ServiceFront"],
+                Tags = ["urlprefix-/ServiceFront strip=/ServiceFront"],
                 Address = "host.docker.internal",
                 Port = _hostPort,
                 Check = new AgentServiceCheck

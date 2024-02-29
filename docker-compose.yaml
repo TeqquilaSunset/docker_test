@@ -40,29 +40,29 @@ services:
     volumes:
       - ./fabio.properties:/etc/fabio/fabio.properties
 
-  # service_api1:
-  #   build:
-  #     context: source/ConsulService1/ConsulService1/
-  #     dockerfile: Dockerfile
-  #   depends_on:
-  #     - consul
-  #   ports:
-  #     - 5001:5001
-  #   environment:
-  #     - ASPNETCORE_URL=http://0.0.0.0:5001
-  #     - CONSUL_URL=http://host.docker.internal:8500
+  service_api1:
+    build:
+      context: source/
+      dockerfile: Dockerfile.service1
+    depends_on:
+      - consul
+    ports:
+      - 5001:5001
+    environment:
+      - ASPNETCORE_URL=http://0.0.0.0:5001
+      - CONSUL_URL=http://host.docker.internal:8500
 
-  # service_api2:
-  #   build:
-  #     context: source/ConsulService1/ConsulService1/
-  #     dockerfile: Dockerfile
-  #   depends_on:
-  #     - consul
-  #   ports:
-  #     - 5002:5002
-  #   environment:
-  #     - ASPNETCORE_URL=http://0.0.0.0:5002
-  #     - CONSUL_URL=http://host.docker.internal:8500
+  service_api2:
+    build:
+      context: source/
+      dockerfile: Dockerfile.service1
+    depends_on:
+      - consul
+    ports:
+      - 5002:5002
+    environment:
+      - ASPNETCORE_URL=http://0.0.0.0:5002
+      - CONSUL_URL=http://host.docker.internal:8500
 
   service_front:
     build:

@@ -17,7 +17,7 @@ namespace ConsulService2.Services
             try
             {
                 var client = _httpClientFactory.CreateClient();
-                var response = await client.GetAsync("http://host.docker.internal:9999/prediction");
+                var response = await client.GetAsync("http://host.docker.internal:9999/ServiceApi/prediction");
 
                 if (response.IsSuccessStatusCode)
                 {
