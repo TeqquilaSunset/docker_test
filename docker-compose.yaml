@@ -8,7 +8,28 @@ services:
     ports:
       - "8500:8500"
       - "8600:8600/udp"
-  
+
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    hostname: rabbitmq
+    restart: always
+    volumes:
+      - ./rabbitmq-data:/var/lib/rabbitmq
+      - ./rabbitmq.conf:/etc/rabbitmq/conf.d/my_config.conf
+    environment:
+      - RABBITMQ_DEFAULT_USER=rmuser
+      - RABBITMQ_DEFAULT_PASS=rmpassword
+    ports:
+      - 15672:15672
+      - 5672:5672
+    command: >
+      bash -c "
+        rabbitmq-plugins enable rabbitmq_peer_discovery_consul &&
+          rabbitmq-server
+      "
+    depends_on:
+      - consul
+
   fabio:
     image: fabiolb/fabio
     depends_on:
@@ -21,8 +42,8 @@ services:
 
   service_api1:
     build:
-      context: ConsulService1/ConsulService1/
-      dockerfile: Dockerfile
+      context: source/
+      dockerfile: Dockerfile.service1
     depends_on:
       - consul
     ports:
@@ -33,8 +54,8 @@ services:
 
   service_api2:
     build:
-      context: ConsulService1/ConsulService1/
-      dockerfile: Dockerfile
+      context: source/
+      dockerfile: Dockerfile.service1
     depends_on:
       - consul
     ports:
@@ -45,8 +66,8 @@ services:
 
   service_front:
     build:
-      context: ConsulService2/ConsulService2/
-      dockerfile: Dockerfile
+      context: source/
+      dockerfile: Dockerfile.service2
     depends_on:
       - consul
     ports:
