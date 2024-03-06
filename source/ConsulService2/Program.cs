@@ -2,7 +2,9 @@ using Consul;
 using ConsulService2.Models;
 using ConsulService2.Services;
 using MassTransit;
+using Microsoft.Extensions.Configuration;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,14 +29,44 @@ builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient
 }));
 builder.Services.AddSingleton<IHostedService, ConsulHostedService>();
 
+
+var consulClient = new ConsulClient(configuration =>
+{
+    configuration.Address = new Uri(urlConsul);
+});
+
+var getPairRabbit = consulClient.KV.Get("rabbit").Result;
+if (getPairRabbit?.Response != null)
+{
+    var value = Encoding.UTF8.GetString(getPairRabbit.Response.Value, 0, getPairRabbit.Response.Value.Length);
+    var consulConfig2 = JsonSerializer.Deserialize<RabbitConfig>(value);
+
+    builder.Configuration["Rabbit:Password"] = consulConfig2.Password;
+    builder.Configuration["Rabbit:User"] = consulConfig2.User;
+    builder.Configuration["Rabbit:Url"] = consulConfig2.Url;
+}
+
+var getPairFabio = consulClient.KV.Get("fabio").Result;
+if (getPairRabbit?.Response != null)
+{
+    var value = Encoding.UTF8.GetString(getPairRabbit.Response.Value, 0, getPairRabbit.Response.Value.Length);
+    var consulConfig3 = JsonSerializer.Deserialize<FabioConfig>(value);
+
+    builder.Configuration["Fabio:Adress"] = consulConfig3.Adress;
+    builder.Configuration["Fabio:Port"] = consulConfig3.Port.ToString();
+}
+
+
+var configuration = builder.Configuration;
+var rabbitUrl = configuration["Rabbit:Url"];
 builder.Services.AddMassTransit(x =>
 {
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("host.docker.internal", c =>
+        cfg.Host(configuration["Rabbit:Url"], c =>
         {
-            c.Username("rmuser");
-            c.Password("rmpassword");
+            c.Username(configuration["Rabbit:User"]);
+            c.Password(configuration["Rabbit:Password"]);
         });
 
         cfg.ClearSerialization();

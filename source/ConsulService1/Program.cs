@@ -1,12 +1,15 @@
 using Consul;
 using ConsulService1;
 using ConsulService1.Consumers;
+using ConsulService1.Models;
 using ConsulService1.Services;
 using Core.Models;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+//builder.Services.Configure<ConfigFromConsul>();
 // Получение адреса хоста извне или использования стандартного
 string url = Environment.GetEnvironmentVariable("ASPNETCORE_URL") ?? "http://localhost:57369";
 builder.WebHost.UseUrls(url);

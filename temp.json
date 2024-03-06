@@ -1,0 +1,15 @@
+// rabbit
+{
+    "Password": "rmpassword",
+    "User": "rmuser",
+    "Url": "host.docker.internal"
+}
+// fabio
+{
+    "Adress": "host.docker.internal",
+    "Port": "9999"
+}
+// database
+{
+    "CONNECTION_STRING": ""
+}
