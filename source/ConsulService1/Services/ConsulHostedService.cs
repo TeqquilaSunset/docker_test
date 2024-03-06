@@ -25,10 +25,18 @@ namespace ConsulService1.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            var registration = CreateAgentServiceRegistration();
-            await _consulClient.Agent.ServiceRegister(registration, cancellationToken);
+            try
+            {
+                var registration = CreateAgentServiceRegistration();
+                await _consulClient.Agent.ServiceRegister(registration, cancellationToken);
 
-            await GetValueAsync<ConfigFromConsul>(key: "service1");
+                await GetValueAsync<ConfigFromConsul>(key: "service1");
+            }
+            catch 
+            {
+
+            }
+
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)

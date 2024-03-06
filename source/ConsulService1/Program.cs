@@ -1,9 +1,11 @@
 using Consul;
+using ConsulService1;
 using ConsulService1.Consumers;
 using ConsulService1.Services;
 using Core.Models;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +20,7 @@ string url = Environment.GetEnvironmentVariable("ASPNETCORE_URL") ?? "http://loc
 builder.WebHost.UseUrls(url);
 
 builder.Services.AddHttpClient();
-builder.Services.AddSingleton<IPredictionsGenerator, PredictionService>();
+builder.Services.AddScoped<IPredictionsGenerator, PredictionService>();
 
 string urlConsul = Environment.GetEnvironmentVariable("CONSUL_URL") ?? "http://localhost:8500";
 builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
@@ -26,6 +28,9 @@ builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient
     consulConfig.Address = new Uri(urlConsul);
 }));
 builder.Services.AddSingleton<IHostedService, ConsulHostedService>();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+       options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddMassTransit(x =>
 {
@@ -56,14 +61,17 @@ builder.Services.AddMassTransit(x =>
 });
 
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    
 }
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseAuthorization();
 app.MapControllers();
