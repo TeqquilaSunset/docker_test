@@ -1,8 +1,11 @@
 using Consul;
+using ConsulService2.Helpers;
 using ConsulService2.Models;
 using ConsulService2.Services;
 using MassTransit;
+using Microsoft.Extensions.Configuration;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,14 +30,21 @@ builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient
 }));
 builder.Services.AddSingleton<IHostedService, ConsulHostedService>();
 
+// ��������� ������ � kv consul
+var consulConfiguration = new ConsulConfiguration(builder.Configuration, urlConsul);
+consulConfiguration.Configure();
+
+var configuration = builder.Configuration;
+var rabbitUrl = configuration["Rabbit:Url"];
+// ���������� masstransit ��� ������ � rabbit
 builder.Services.AddMassTransit(x =>
 {
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("host.docker.internal", c =>
+        cfg.Host(configuration["Rabbit:Url"], c =>
         {
-            c.Username("rmuser");
-            c.Password("rmpassword");
+            c.Username(configuration["Rabbit:User"]);
+            c.Password(configuration["Rabbit:Password"]);
         });
 
         cfg.ClearSerialization();

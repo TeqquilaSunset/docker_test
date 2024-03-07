@@ -14,7 +14,11 @@ namespace ConsulService1.Consumers
 
         public async Task Consume(ConsumeContext<NewPrediction> context)
         {
-            _prediction.AddNewPredictionWord(context.Message.Prediction);
+            if(context.Message.Prediction == null)
+            {
+                return;
+            }
+            await _prediction.AddNewPredictionWordAsync(context.Message.Prediction);
         }
     }
 }

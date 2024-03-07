@@ -26,16 +26,17 @@ namespace ConsulService1.Controllers
         }
 
         [HttpGet("/prediction")]
-        public IActionResult GetPrediction()
+        public async Task<IActionResult> GetPrediction()
         {
-            var prediction = _predictionServices.GeneratePrediction();
+            var prediction = await _predictionServices.GeneratePrediction();
             return Ok(prediction);
         }
 
         [HttpPut("/prediction/{word}")]
-        public IActionResult GetPrediction(string word)
+
+        public async Task<IActionResult> GetPrediction(string word)
         {
-            _predictionServices.AddNewPredictionWord(word);
+            await _predictionServices.AddNewPredictionWordAsync(word);
             return Ok();
         }
     }

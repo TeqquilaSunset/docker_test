@@ -1,4 +1,4 @@
-﻿using ConsulService2.Services;
+using ConsulService2.Services;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
@@ -39,7 +39,7 @@ namespace ConsulService2.Controllers
             }
             catch (Exception ex)
             {
-                ViewData["Prediction"] = "Не удалось получить предсказание";
+                ViewData["Prediction"] = $"Не удалось получить предсказание:{ex}";
                 return View();
             }
         }
