@@ -1,4 +1,3 @@
-﻿
 using Consul;
 using ConsulService1.Models;
 using Microsoft.Extensions.Configuration;

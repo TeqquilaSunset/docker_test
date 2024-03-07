@@ -15,6 +15,7 @@ using System.Text.Json;
 using ConsulService2.Models;
 using ConsulService1.Helpers;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -22,8 +23,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-// Получение адреса хоста извне или использования стандартного
+// ГЏГ®Г«ГіГ·ГҐГ­ГЁГҐ Г Г¤Г°ГҐГ±Г  ГµГ®Г±ГІГ  ГЁГ§ГўГ­ГҐ ГЁГ«ГЁ ГЁГ±ГЇГ®Г«ГјГ§Г®ГўГ Г­ГЁГї Г±ГІГ Г­Г¤Г Г°ГІГ­Г®ГЈГ®
 string url = Environment.GetEnvironmentVariable("ASPNETCORE_URL") ?? "http://localhost:57369";
 builder.WebHost.UseUrls(url);
 
@@ -37,7 +37,7 @@ builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient
 }));
 builder.Services.AddSingleton<IHostedService, ConsulHostedService>();
 
-// Получение данных и kv consul
+// ГЏГ®Г«ГіГ·ГҐГ­ГЁГҐ Г¤Г Г­Г­Г»Гµ ГЁ kv consul
 var consulConfiguration = new ConsulConfiguration(builder.Configuration, urlConsul);
 consulConfiguration.Configure();
 
@@ -75,16 +75,13 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    
-}
 
+}
 app.UseSwagger();
 app.UseSwaggerUI();
 

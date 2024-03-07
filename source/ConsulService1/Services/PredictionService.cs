@@ -1,4 +1,4 @@
-﻿using MassTransit.Initializers;
+using MassTransit.Initializers;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsulService1.Services

@@ -1,4 +1,4 @@
-﻿using ConsulService2.Services;
+using ConsulService2.Services;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client;

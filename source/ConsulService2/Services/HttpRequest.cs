@@ -22,7 +22,7 @@ namespace ConsulService2.Services
                 var portFabio = _configuration["Fabio:Port"];
                 var client = _httpClientFactory.CreateClient();
                 var response = await client.GetAsync($"http://{adressFabio}:{portFabio}/ServiceApi/prediction");
-
+                
                 if (response.IsSuccessStatusCode)
                 {
                     var responseBody = await response.Content.ReadAsStringAsync();

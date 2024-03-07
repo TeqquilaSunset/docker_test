@@ -33,6 +33,7 @@ namespace ConsulService1.Controllers
         }
 
         [HttpPut("/prediction/{word}")]
+
         public async Task<IActionResult> GetPrediction(string word)
         {
             await _predictionServices.AddNewPredictionWordAsync(word);

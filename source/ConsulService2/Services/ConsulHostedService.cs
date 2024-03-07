@@ -1,4 +1,3 @@
-﻿
 using Consul;
 using ConsulService2.Models;
 using MassTransit;

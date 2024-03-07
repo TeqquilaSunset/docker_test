@@ -30,13 +30,13 @@ builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient
 }));
 builder.Services.AddSingleton<IHostedService, ConsulHostedService>();
 
-// Получение данных и kv consul
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ kv consul
 var consulConfiguration = new ConsulConfiguration(builder.Configuration, urlConsul);
 consulConfiguration.Configure();
 
 var configuration = builder.Configuration;
 var rabbitUrl = configuration["Rabbit:Url"];
-// Ргестрация masstransit для работы с rabbit
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ masstransit пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ rabbit
 builder.Services.AddMassTransit(x =>
 {
     x.UsingRabbitMq((context, cfg) =>
