@@ -11,14 +11,12 @@ namespace ConsulService2.Services
     public class ConsulHostedService : IHostedService
     {
         private readonly IConsulClient _consulClient;
-        private readonly IConfiguration _configuration;
         private readonly int _hostPort;
         private readonly string _idService;
 
-        public ConsulHostedService(IConsulClient consulClient, IConfiguration configuration)
+        public ConsulHostedService(IConsulClient consulClient)
         {
             _consulClient = consulClient;
-            _configuration = configuration;
             _hostPort = GetPort();
             _idService = $"service-front-{GenerateShortUid(8)}-{_hostPort}";
         }
@@ -32,8 +30,6 @@ namespace ConsulService2.Services
         {
             var registration = CreateAgentServiceRegistration();
             await _consulClient.Agent.ServiceRegister(registration, cancellationToken);
-
-            await GetValueAsync<ConsulDemoKey>(key: "service2");
         }
 
         /// <summary>
@@ -65,27 +61,6 @@ namespace ConsulService2.Services
             };
         }
 
-        public async Task GetValueAsync<T>(string key)
-        {
-            var getPair = await _consulClient.KV.Get(key);
-
-            if (getPair?.Response == null)
-            {
-                return;
-            }
-
-            var value = Encoding.UTF8.GetString(getPair.Response.Value, 0, getPair.Response.Value.Length);
-            var deserializedValue = JsonSerializer.Deserialize<T>(value);
-
-            if (deserializedValue is ConsulDemoKey consulDemoKey)
-            {
-                _configuration["IsEnabled"] = consulDemoKey.IsEnabled.ToString();
-                _configuration["ShowMessage"] = consulDemoKey.ShowMessage.ToString();
-                _configuration["Message"] = consulDemoKey.Message;
-            }
-
-            return;
-        }
         private static string GenerateShortUid(int length)
         {
             Guid guid = Guid.NewGuid();

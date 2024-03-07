@@ -11,37 +11,25 @@ namespace ConsulService1.Services
     public class ConsulHostedService : IHostedService
     {
         private IConsulClient _consulClient;
-        private IConfiguration _configuration;
         private readonly int _hostPort;
         private readonly string _idService;
 
-        public ConsulHostedService(IConsulClient consulClient, IConfiguration configuration) 
+        public ConsulHostedService(IConsulClient consulClient)
         {
             _consulClient = consulClient;
-            _configuration = configuration;
             _hostPort = GetPort();
             _idService = $"service-api-{GenerateShortUid(8)}-{_hostPort}";
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            try
-            {
-                var registration = CreateAgentServiceRegistration();
-                await _consulClient.Agent.ServiceRegister(registration, cancellationToken);
-
-                await GetValueAsync<ConfigFromConsul>(key: "service1");
-            }
-            catch 
-            {
-
-            }
-
+            var registration = CreateAgentServiceRegistration();
+            await _consulClient.Agent.ServiceRegister(registration, cancellationToken);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-           await _consulClient.Agent.ServiceDeregister(_idService);
+            await _consulClient.Agent.ServiceDeregister(_idService);
         }
 
         private AgentServiceRegistration CreateAgentServiceRegistration()
@@ -63,24 +51,6 @@ namespace ConsulService1.Services
             };
         }
 
-        public async Task GetValueAsync<T>(string key)
-        {
-            var getPair = await _consulClient.KV.Get(key);
-
-            if (getPair?.Response == null)
-            {
-                return;
-            }
-
-            var value = Encoding.UTF8.GetString(getPair.Response.Value, 0, getPair.Response.Value.Length);
-            var deserializedValue = JsonSerializer.Deserialize<T>(value);
-
-            if (deserializedValue is ConfigFromConsul configFromConusl)
-            {
-                _configuration["Message"] = configFromConusl.Message;
-            }
-            return;
-        }
         private static string GenerateShortUid(int length)
         {
             Guid guid = Guid.NewGuid();

@@ -26,9 +26,9 @@ namespace ConsulService1.Controllers
         }
 
         [HttpGet("/prediction")]
-        public IActionResult GetPrediction()
+        public async Task<IActionResult> GetPrediction()
         {
-            var prediction = _predictionServices.GeneratePrediction();
+            var prediction = await _predictionServices.GeneratePrediction();
             return Ok(prediction);
         }
 

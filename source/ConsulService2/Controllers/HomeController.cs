@@ -39,7 +39,7 @@ namespace ConsulService2.Controllers
             }
             catch (Exception ex)
             {
-                ViewData["Prediction"] = "Не удалось получить предсказание";
+                ViewData["Prediction"] = $"Не удалось получить предсказание:{ex}";
                 return View();
             }
         }
