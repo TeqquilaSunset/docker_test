@@ -10,7 +10,7 @@ namespace ConsulService1
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            Database.Migrate();
         }
 
     }

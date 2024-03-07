@@ -11,5 +11,5 @@
 }
 // database
 {
-    "CONNECTION_STRING": ""
+    "DefaultConnection": "Server=localhost;Port=5432;User Id=postgres;Password=passw0rd;Database=predictionsdb;"
 }

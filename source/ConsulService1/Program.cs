@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
+using System.Text;
+using System.Text.Json;
+using ConsulService2.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +22,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-//builder.Services.Configure<ConfigFromConsul>();
 // Получение адреса хоста извне или использования стандартного
 string url = Environment.GetEnvironmentVariable("ASPNETCORE_URL") ?? "http://localhost:57369";
 builder.WebHost.UseUrls(url);
@@ -34,16 +36,55 @@ builder.Services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient
 }));
 builder.Services.AddSingleton<IHostedService, ConsulHostedService>();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-       options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+var consulClient = new ConsulClient(configuration =>
+{
+    configuration.Address = new Uri(urlConsul);
+});
+
+var getPairRabbit = consulClient.KV.Get("rabbit").Result;
+if (getPairRabbit?.Response != null)
+{
+    var value = Encoding.UTF8.GetString(getPairRabbit.Response.Value, 0, getPairRabbit.Response.Value.Length);
+    var consulConfig2 = JsonSerializer.Deserialize<RabbitConfig>(value);
+
+    builder.Configuration["Rabbit:Password"] = consulConfig2.Password;
+    builder.Configuration["Rabbit:User"] = consulConfig2.User;
+    builder.Configuration["Rabbit:Url"] = consulConfig2.Url;
+}
+
+var getPairFabio = consulClient.KV.Get("fabio").Result;
+if (getPairRabbit?.Response != null)
+{
+    var value = Encoding.UTF8.GetString(getPairRabbit.Response.Value, 0, getPairRabbit.Response.Value.Length);
+    var consulConfig3 = JsonSerializer.Deserialize<FabioConfig>(value);
+
+    builder.Configuration["Fabio:Adress"] = consulConfig3.Adress;
+    builder.Configuration["Fabio:Port"] = consulConfig3.Port.ToString();
+}
+
+var getPairDatabase = consulClient.KV.Get("database").Result;
+if (getPairRabbit?.Response != null)
+{
+    var value = Encoding.UTF8.GetString(getPairDatabase.Response.Value, 0, getPairDatabase.Response.Value.Length);
+    var consulConfig3 = JsonSerializer.Deserialize<DbConfig>(value);
+
+    builder.Configuration["ConnectionStrings:DefaultConnection"] = consulConfig3.DefaultConnection;
+}
+var fgfgfg = builder.Configuration["ConnectionStrings:DefaultConnection"];
+builder.Services.AddDbContext<AppDbContext>(options =>
+       options.UseNpgsql(fgfgfg));
+
+var configuration = builder.Configuration;
+var rabbitUrl = configuration["Rabbit:Url"];
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<PredictionConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("host.docker.internal", c =>
+        cfg.Host(rabbitUrl, c =>
         {
             c.Username("rmuser");
             c.Password("rmpassword");
